@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
+
 
 function TextInput() {
     const [text, setText] = useState('');
@@ -48,24 +48,6 @@ function TextInput() {
     // Calculate curve based on the length of the text
     const char = text.length;
     const weight = char > 8 ? char - 8 : 0;
-    const [offset, setOffset] = useState(Math.pow(weight, 2)); // Initialize offset state
-
-    // Update offset dynamically whenever weight changes
-    useEffect(() => {
-        setOffset(Math.pow(weight, 2)); // Adjust the offset dynamically based on weight
-    }, [weight]);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setOffset(prevOffset => {
-                return prevOffset - (prevOffset * 0.01); // Exponentially reduce the offset
-            });
-        }, 100); // Adjust interval to control the rate of reduction
-    
-        return () => clearInterval(interval); // Cleanup interval on unmount
-    }, [weight]); // This effect should reset whenever `weight` changes
-    
-    
 
     // Control points for the cubic Bézier curve
     const curveStartX = 100; // Where the curve begins on the x-axis
@@ -79,23 +61,10 @@ function TextInput() {
     const controlPointX2 = curveEndX - 50; // Close to the end of the curve
     const controlPointY2 = curveEndY; // Move down with the curve's end
 
-    const pathData = { 
-        curveStartX, 
-        curveStartY, 
-        controlPointX1, 
-        controlPointY1, 
-        controlPointX2, 
-        controlPointY2, 
-        curveEndX, 
-        curveEndY 
-    };
-
     // Path data string for SVG
     const pathD = `M10 150 L${curveStartX} ${curveStartY} C ${controlPointX1} ${controlPointY1}, ${controlPointX2} ${controlPointY2}, ${curveEndX} ${curveEndY}`;
-    const pathRight = getOscillatedPath(pathData, offset); // Small amplitude oscillation to the right
-    const pathLeft = getOscillatedPath(pathData, -offset);  // Small amplitude oscillation to the left
 
-    return(
+    return (
         <div style={{ position: 'relative', width: '600px', height: '200px' }}>
             <input 
                 ref={inputRef} // Attach the ref to the input
@@ -119,44 +88,21 @@ function TextInput() {
                 spellCheck="false" // Disable spell check
             />
 
-            <motion.svg width="600" height="800">
-                <motion.path 
+            <svg width="600" height="800">
+                <path 
                     id="curve" 
                     d={pathD} 
                     fill="transparent" 
                     stroke="transparent" 
-                    animate={{
-                        d: [
-                            pathLeft,
-                            pathRight,
-                        ]
-                    }}
-                    transition={{
-                        duration: 1,
-                        ease: "easeInOut",
-                        repeat: Infinity,
-                        repeatType: "mirror",
-                    }}
-                    />
+                />
                 <text fontSize='2em' fontWeight='bold' fill="currentColor">
                     <textPath href="#curve" startOffset="0%" textAnchor="left">
                         {text}
                     </textPath>
                 </text>
-            </motion.svg>
+            </svg>
         </div>
-    )
-}
-
-function getOscillatedPath(pathData, amplitude = 10) {
-    const offset = () => Math.random() * amplitude - amplitude / 2; // Generates a small random offset
-    const { curveStartX, curveStartY, controlPointX1, controlPointY1, controlPointX2, controlPointY2, curveEndX, curveEndY } = pathData;
-
-    const newControlPointX1 = controlPointX1 + offset();
-    const newControlPointX2 = controlPointX2 + offset();
-    const newCurveEndY = curveEndY + offset();
-
-    return `M10 150 L${curveStartX} ${curveStartY} C ${newControlPointX1} ${controlPointY1}, ${newControlPointX2} ${controlPointY2}, ${curveEndX} ${newCurveEndY}`;
+    );
 }
 
 export default TextInput;

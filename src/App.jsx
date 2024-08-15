@@ -1,16 +1,22 @@
 import { useState } from 'react'
 import TextInput from './components/droopyInput'
+import PhysicsPlayground from './components/physicsPlayground'
+import JustBodies from './components/justBodies';
 
 import './app.css';
 
-import SimpleAnimation from './components/simpleAnimation'
+
+
 
 function App() {
 
 
   return (
     <>
-      <TextInput />
+    <div>
+      <JustBodies />
+
+    </div>
     </>
   )
 }
