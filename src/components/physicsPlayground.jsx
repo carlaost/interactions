@@ -79,6 +79,23 @@ function PhysicsPlayground() {
         // Attach the click event listener to the container
         containerRef.current.addEventListener('click', handleClick);
 
+        // Step 1: Create the mouse control
+        const mouse = Matter.Mouse.create(render.canvas);
+        const mouseConstraint = Matter.MouseConstraint.create(engine, {
+            mouse: mouse,
+            constraint: {
+                stiffness: .05, // Stiffness of the constraint (mouse movement)
+                render: {
+                    visible: false
+                }
+            }
+        });
+
+        // Step 2: Add the mouse control to the world
+        Matter.World.add(world, mouseConstraint);
+
+        // Step 3: Keep the mouse in sync with the renderer
+        render.mouse = mouse;
 
         // Step 6: Run the engine using the Runner
         Matter.Runner.run(runner, engine); // This is the correct way to run the engine with a runner

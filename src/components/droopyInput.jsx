@@ -88,7 +88,7 @@ function TextInput() {
                 spellCheck="false" // Disable spell check
             />
 
-            <svg width="600" height="800">
+            <svg width="600" height="200">
                 <path 
                     id="curve" 
                     d={pathD} 
