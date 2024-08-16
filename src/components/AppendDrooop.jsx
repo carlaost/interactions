@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from 'react';
 
 // TODO: 
 // figure out the right constraints to make it bendy/springboardy rather than just droopy
-// also make a board that just bends under weight where each character adds weight, flying in from top. 
+// also make a board that just bends under weight where each character adds weight, flying in from top.
 
 
 function AppendDrooop({ }) {
