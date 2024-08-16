@@ -64,13 +64,26 @@ function PhysicsPlayground() {
             Matter.World.add(engine.world, newBox);
         };
 
+        // Handle keyboard stroke to add new box
+        const handleKeyDown = (event) => {
+            console.log(`Key pressed: ${event.key}`);
+            const rect = containerRef.current.getBoundingClientRect();
+            const middleX = rect.left + rect.width / 2;
+            const middleY = rect.top + rect.height / 2;
+
+            const newCircle = Matter.Bodies.circle(middleX, middleY, 40, { render: { fillStyle: 'blue' } });
+            Matter.World.add(engine.world, newCircle);
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+
         // Collision event listener
         Matter.Events.on(engine, 'collisionStart', (event) => {
             const pairs = event.pairs;
 
             pairs.forEach((pair) => {
                 const { bodyA, bodyB } = pair;
-                console.log('Collision detected between:', bodyA, bodyB);
                 // You can add more logic here, such as changing body properties
             });
         });
