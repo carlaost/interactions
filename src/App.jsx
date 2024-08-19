@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import TextInput from './components/droopyInput'
 import PhysicsPlayground from './components/physicsPlayground'
-import JiggleDrooop from './components/JiggleDrooop';
+import JiggleDroop from './components/JiggleDrooop';
 
 import './app.css';
 import AppendDrooop from './components/AppendDrooop';
+import CreateWorld from './components/CreateWorld';
 
 
 
@@ -25,8 +26,9 @@ function App() {
           onChange={handleInputChange} // Update the state on input change
           placeholder="Type something..." // Optional: Add a placeholder
         /> */}
-      <AppendDrooop text= {inputValue} />
+      {/* <JiggleDroop text= {inputValue} /> */}
       {/* <PhysicsPlayground /> */}
+      <CreateWorld />
 
     </div>
     </>
