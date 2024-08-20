@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import Matter from 'matter-js';
 
-function useAddWord(containerRef, engine, world, canvasContext, isInitialized) {
+function useAddWord(containerRef, engine, world, canvasContext, isInitialized, mousePositionRef) {
     const characters = useRef([]); // Array to store words and their boxes
     const wordBuffer = useRef(''); // Buffer to accumulate characters for a word
     const xOffset = useRef(100); // Tracks the x position for the next word
@@ -23,7 +23,7 @@ function useAddWord(containerRef, engine, world, canvasContext, isInitialized) {
         previewCanvasRef.current = previewCanvas;
         previewCanvasContext.current = previewCanvas.getContext('2d');
 
-        const handleKeyDown = (event) => {
+        const handleKeyDown = (event, position) => {
             if (['Meta', 'Shift', 'Control', 'Alt', 'CapsLock', 'Tab'].includes(event.key)) {
                 return;
             }
@@ -33,13 +33,13 @@ function useAddWord(containerRef, engine, world, canvasContext, isInitialized) {
             } else if (event.key === ' ') {
                 const word = wordBuffer.current.trim();
                 if (word.length > 0) {
-                    addWordToCanvas(word);
+                    addWordToCanvas(word, mousePositionRef.current);
                     wordBuffer.current = '';
                     clearPreviewCanvas(); // Clear the preview when the word is added
                 }
             } else {
                 wordBuffer.current += event.key;
-                renderPreviewText(wordBuffer.current);
+                renderPreviewText(wordBuffer.current, mousePositionRef.current);
             }
         };
 
@@ -48,17 +48,17 @@ function useAddWord(containerRef, engine, world, canvasContext, isInitialized) {
                 // Remove the last character from the buffer
                 wordBuffer.current = wordBuffer.current.slice(0, -1);
                 // Re-render the preview text
-                renderPreviewText(wordBuffer.current);
+                renderPreviewText(wordBuffer.current, mousePositionRef.current);
             }
         };
 
-        const renderPreviewText = (text) => {
+        const renderPreviewText = (text, position) => {
             const context = previewCanvasContext.current;
             context.clearRect(0, 0, previewCanvas.width, previewCanvas.height); // Clear the preview canvas
 
             const textWidth = context.measureText(text).width;
-            const xPos = xOffset.current + textWidth / 2;
-            const yPos = 50; // Fixed y position for simplicity
+            const xPos = position.x + textWidth / 2;
+            const yPos = position.y; // Fixed y position for simplicity
 
             context.font = "16px Arial";
             context.fillStyle = "black";
@@ -70,12 +70,12 @@ function useAddWord(containerRef, engine, world, canvasContext, isInitialized) {
             context.clearRect(0, 0, previewCanvas.width, previewCanvas.height); // Clear the preview canvas
         };
 
-        const addWordToCanvas = (word) => {
+        const addWordToCanvas = (word, position) => {
             console.log(`Word to add: ${word}`);
 
             const wordWidth = canvasContext.measureText(word).width;
-            const xPos = xOffset.current + wordWidth / 2;
-            const yPos = 50; // Fixed y position for simplicity
+            const xPos = position.x + wordWidth / 2;
+            const yPos = position.y; // Use mouse position for y coordinate
 
             const wordBox = Matter.Bodies.rectangle(xPos, yPos, wordWidth, 16, {
                 render: {
@@ -89,7 +89,6 @@ function useAddWord(containerRef, engine, world, canvasContext, isInitialized) {
 
             characters.current.push({ word, wordBox, wordWidth });
 
-            xOffset.current += wordWidth + 10; // Add a small space between words
         };
 
         Matter.Events.on(engine, 'afterUpdate', () => {

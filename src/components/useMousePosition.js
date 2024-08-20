@@ -4,7 +4,7 @@ function useMousePosition(isInitialized) {
     const mousePositionRef = useRef({ x: 0, y: 0 });
 
     useEffect(() => {
-        if (!isInitialized) return;
+        // if (!isInitialized) return;
 
         const handleMouseMove = (event) => {
             mousePositionRef.current = {

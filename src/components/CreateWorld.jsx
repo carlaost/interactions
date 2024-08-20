@@ -3,6 +3,7 @@ import Matter from 'matter-js';
 import useAddChar from './useAddChar';
 import useAddWord from './useAddWord';
 import useDrag from './useDrag';
+import useMousePosition from './useMousePosition';
 
 
 function CreateWorld() {
@@ -12,8 +13,9 @@ function CreateWorld() {
     const canvasContextRef = useRef(null);
     const renderRef = useRef(null);
 
-
     const [isInitialized, setIsInitialized] = useState(false); // Track initialization
+    
+    const mousePositionRef = useMousePosition(isInitialized);
 
     useEffect(() => {
         // Create the Matter.js engine and world
@@ -78,7 +80,7 @@ function CreateWorld() {
 
 
     // useAddChar(containerRef, engineRef.current, worldRef.current, canvasContextRef.current, isInitialized);
-    useAddWord(containerRef, engineRef.current, worldRef.current, canvasContextRef.current, isInitialized);
+    useAddWord(containerRef, engineRef.current, worldRef.current, canvasContextRef.current, isInitialized, mousePositionRef);
     useDrag(engineRef.current, worldRef.current, containerRef, isInitialized);
 
 
