@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import Matter from 'matter-js';
 import useAddChar from './useAddChar';
+import useAddWord from './useAddWord';
 import useDrag from './useDrag';
 
 
@@ -51,7 +52,7 @@ function CreateWorld() {
         renderRef.current = render;
 
 
-        engine.gravity.y = 0;
+        engine.gravity.y = 0.1;
 
         const ground = Matter.Bodies.rectangle((window.innerWidth / 2), window.innerHeight, window.innerWidth, 60, { isStatic: true });
 
@@ -76,7 +77,8 @@ function CreateWorld() {
     }, []);
 
 
-    useAddChar(containerRef, engineRef.current, worldRef.current, canvasContextRef.current, isInitialized);
+    // useAddChar(containerRef, engineRef.current, worldRef.current, canvasContextRef.current, isInitialized);
+    useAddWord(containerRef, engineRef.current, worldRef.current, canvasContextRef.current, isInitialized);
     useDrag(engineRef.current, worldRef.current, containerRef, isInitialized);
 
 
